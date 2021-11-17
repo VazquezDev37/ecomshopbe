@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const { User, validateUser } = require("../models/User");
 const bcrypt = require("bcrypt");
-//const jwt = require("jsonwebtoken");
+const jwt = require("jsonwebtoken");
 
 
 //Register Ecom Shop
@@ -29,6 +29,31 @@ router.post("/register", async (req, res)=> {
 
   }
 });
+
+//Login Ecom Shop
+router.post("/login", async (req, res)=> {
+  try {
+    const { error } = validateLogin(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
+    let user = await User.findOne({ email: req.body.email });
+    if (!user) return res.status(400).send("Invalid email or password .");
+    //problem with bcrypt
+    const validPassword = await bcrypt.compare(
+      req.body.password,
+      user.password
+    );
+    if (!validPassword) return res.status(400).send("Invalid password.");
+    const token = user.generateAuthToken();
+    return res.send({
+      token: token,
+      // username:username,
+      email: req.body.email,
+    });
+  } catch (ex) {
+    return res.status(500).send(`Internal Server Error: ${ex}`);
+  }
+});
+
 
 
 module.exports = router
