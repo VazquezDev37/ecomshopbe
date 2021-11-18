@@ -41,8 +41,4 @@ userSchema.methods.generateAuthToken = function () {
   }
 
 
-
-
-module.exports = {User, userSchema, validateUser, validateLogin};
-
-
+  module.exports = {User, userSchema, validateUser, validateLogin};
