@@ -1,29 +1,41 @@
-const router = require("express").Router();
-
-//FIND USER BY ID
-router.put("/:id", async (req, res) => {
-
-    try {
-        const comment = await Comment.findById(req.params.id);
-        
-        if (!comment)
-            return res.status(400).send(`The comments with the id "${req.params.id}" does not exist.`);
-        
-        const reply = new Reply({
-            text: req.body.text
-         });
+const User = require('../models/User');
+const express = require('express');
+const router = express.Router();
 
 
-         comment.replies.push(reply);
-
-         await comment.save();
-
-         return res.send(comment);
-         
-    } catch (ex) {
-        return res.send(500).send(`Internal Server Error: ${ex}`);
-    }
+//Add User
+router.post("/", async (req, res) => {
+  try {
+  const user = new User(req.body);
+    
+    await user.save();
+    return res.send(user);
+  } catch (ex) {
+    return res.status(500).send(`Internal Server Error:${ex}`);
+  }
 });
+
+//Get All Users
+router.get('/all', async (req, res) => {
+  try {
+    const user = await User.find();
+    return res.send(user);
+  } catch (ex) {
+return res.status(500).send(`Internal Server Error: ${ex}`); }
+});
+
+//Find User by ID
+router.get('/:id', async (req, res) => {
+  try {
+const user = await User.findById(req.params.id);
+if (!user)
+return res.status(400).send(`The user with id "${req.params.id}" does not exist.`);
+  return res.send(user);
+} catch (ex) {
+return res.status(500).send(`Internal Server Error: ${ex}`);
+}
+});
+
 
 //DELETE USER
 router.delete("/:id", async (req, res) => {
@@ -38,7 +50,6 @@ router.delete("/:id", async (req, res) => {
       return res.status(500).send(`Internal Server Error:${ex}`);
     }
   });
-
 
 
 
