@@ -3,7 +3,8 @@ const express = require('express');
 const router = express.Router();
 
 
-router.post("/product", async (req, res) => {
+//Add Product
+router.post("/", async (req, res) => {
   try {
   const product = new Product(req.body);
     
@@ -14,51 +15,64 @@ router.post("/product", async (req, res) => {
   }
 });
 
-router.get("/api/products", async (req, res) => {
+//Get All Products
+router.get('/all', async (req, res) => {
   try {
-  const newProduct = new Product(req.body);
-  const products = products.findAllProducts();
-    
-    await newProduct.save();
-    return res.send(newProduct);
-  } catch (ex) {
-    return res.status(500).send(`Internal Server Error:${ex}`);
-  }
-});
-
-router.get('/api/products/:id', async (req, res) => {
-  try {
-  const id = req.params.id;
-  const product = products.findProductById(id); return res.send(product);
-  }catch (ex) {
-    return res.status(500).send(`Internal Server Error:${ex}`);
-  }
-});
-
-  router.put('/api/products/:id', async (req, res) => {
-    try {
-    const id = req.params.id;
-    const productToUpdate = (req.body);
-    const updatedProduct = products.updateProduct(id, productToUpdate);
-        return res.send(updatedProduct);
-    }catch (ex) {
-      return res.status(500).send(`Internal Server Error:${ex}`);
-    }
-  });
-
-  //DELETE PRODUCT
-router.delete("/:id", async (req, res) => {
-  try {
-    const product = await User.findByIdAndRemove(req.params.id);
-    if (!product)
-      return res
-        .status(400)
-        .send(`The product with id “${id.params.id}” does not exist`);
+    const product = await Product.find();
     return res.send(product);
   } catch (ex) {
-    return res.status(500).send(`Internal Server Error:${ex}`);
-  }
+return res.status(500).send(`Internal Server Error: ${ex}`); }
 });
+
+//Find Product by ID
+router.get('/:id', async (req, res) => {
+  try {
+const product = await Product.findById(req.params.id);
+if (!product)
+return res.status(400).send(`The product with id "${req.params.id}" d
+oes not exist.`);
+    return res.send(product);
+} catch (ex) {
+return res.status(500).send(`Internal Server Error: ${ex}`);
+}
+});
+
+//Update Product
+router.put('/:id', async (req, res) => {
+  try {
+//const { error } = validate(req.body);
+//if (error) return res.status(400).send(error);
+const product = await Product.findByIdAndUpdate(
+  req.params.id,
+  {
+    title: req.body.title,
+    desc: req.body.desc,
+    category: req.body.category,
+    price: req.body.price,
+    countInStock: req.body.countInStock,
+    imageUrl: req.body.imageUrl 
+  },
+    { new: true }
+  );
+if (!product)
+return res.status(400).send(`The product with id "${req.params.id}" does not exist.`);
+    await product.save();
+    return res.send(product);
+  } catch (ex) {
+return res.status(500).send(`Internal Server Error: ${ex}`); }
+});
+
+  //DELETE PRODUCT
+router.delete('/:id', async (req, res) => {
+    try {
+  const product = await Product.findByIdAndRemove(req.params.id);
+  if (!product)
+  return res.status(400).send(`The product with id "${req.params.id}" does not exist.`);
+      return res.send(product);
+  } catch (ex) {
+  return res.status(500).send(`Internal Server Error: ${ex}`);
+  }
+  });
 
 
 
