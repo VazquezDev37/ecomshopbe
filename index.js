@@ -6,6 +6,7 @@ const authRoutes = require("./routes/auth");
 //const productRoutes = require("./routes/product");
 const product = require('./routes/product');
 const cart = require('./routes/cart');
+const order = require('./routes/order');
 
 
 connectDB();
@@ -17,6 +18,7 @@ app.use("/api/auth", authRoutes);
 //app.use("/api/products", productRoutes);
 app.use('/api/product', product);
 app.use('/api/cart', cart);
+app.use('/api/order', order);
 
 
 const port = process.env.PORT || 5000;

@@ -39,8 +39,7 @@ return res.status(500).send(`Internal Server Error: ${ex}`);
 //Update Product
 router.put('/:id', async (req, res) => {
   try {
-//const { error } = validate(req.body);
-//if (error) return res.status(400).send(error);
+
 const product = await Product.findByIdAndUpdate(
   req.params.id,
   {
