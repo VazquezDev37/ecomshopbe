@@ -16,6 +16,20 @@ router.post("/:userId/:prodId", async (req, res) => {
     }
   });
 
+  router.post('/:userId/shoppingcart/:productId', async (req, res) => { 
+    try {
+    const user = await User.findById(req.params.userId);
+      if (!user) return res.status(400).send(`The user with id "${req.params.userId}" does not exist.`);
+    const product = await Product.findById(req.params.productId);
+      if (!product) return res.status(400).send(`The product with id "${req.params.productId}" does not exist.`);
+    user.shoppingCart.push(product);
+      await user.save();
+    return res.send(user.shoppingCart);
+    } catch (ex) {
+    return res.status(500).send(`Internal Server Error: ${ex}`); 
+  }
+  });
+
   //All in Cart
   router.get("/:userId/:prodId", async (req, res) => {
     try {
@@ -53,6 +67,22 @@ router.post("/:userId/:prodId", async (req, res) => {
     } catch (ex) {
       return res.status(500).send(`Internal Server Error:${ex}`);
     }
+  });
+
+  router.delete('/:userId/shoppingcart/:productId', async (req, res) => { 
+    try {
+    const user = await User.findById(req.params.userId);
+    if (!user) return res.status(400).send(`The user with id "${req.params.userId}" does not exist.`);
+
+    let product = user.shoppingCart.id(req.params.productId);
+    if (!product) return res.status(400).send(`The product with id "${req.params.productId}" does not in the users shopping cart.`);
+    
+        product = await product.remove();
+    await user.save();
+        return res.send(product);
+    } catch (ex) {
+    return res.status(500).send(`Internal Server Error: ${ex}`);
+    } 
   });
 
 
