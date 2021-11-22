@@ -1,24 +1,24 @@
 const connectDB = require('./startup/db');
 const express = require('express');
 const app = express();
-const userRoutes = require("./routes/user");
-const authRoutes = require("./routes/auth");
-//const productRoutes = require("./routes/product");
+const user = require("./routes/user");
+const auth = require("./routes/auth");
 const product = require('./routes/product');
 const cart = require('./routes/cart');
 const order = require('./routes/order');
+const stripe = require('./routes/stripe');
 
 
 connectDB();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use("/api/users", userRoutes);
-app.use("/api/auth", authRoutes);
-//app.use("/api/products", productRoutes);
+app.use("/api/users", user);
+app.use("/api/auth", auth);
 app.use('/api/product', product);
 app.use('/api/cart', cart);
 app.use('/api/order', order);
+app.use('/api/stripe', stripe);
 
 
 const port = process.env.PORT || 5000;
