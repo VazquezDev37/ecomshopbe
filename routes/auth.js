@@ -14,7 +14,7 @@ router.post("/register", async (req, res)=> {
         if (user) return res.status(400).send("User already registered.");
         const salt = await bcrypt.genSalt(10);
         user = new User({
-          username: req.body.username,
+          
           email: req.body.email,
           password: await bcrypt.hash(req.body.password, salt),
         });
@@ -23,7 +23,7 @@ router.post("/register", async (req, res)=> {
         return res
           .header("x-auth-token", token)
           .header("access-control-expose-headers", "x-auth-token")
-          .send({ _id: user._id, username: user.username, email: user.email });
+          .send({ _id: user._id, email: user.email });
       } catch (ex) {
         return res.status(500).send(`Internal Server Error: ${ex}`);
 
