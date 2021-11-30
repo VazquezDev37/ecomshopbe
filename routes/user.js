@@ -30,7 +30,7 @@ router.put('/:userId/shoppingcart/:productId', async (req, res) => {
   product.description = req.body.description;
   product.category = req.body.category;
   product.price = req.body.price;
-  product.dateModified = Date.now();
+  // product.dateModified = Date.now();
 
   await user.save();
   return res.send(product);
