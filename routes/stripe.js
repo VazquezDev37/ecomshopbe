@@ -6,12 +6,45 @@ app.use(express.static('public'));
 
 const YOUR_DOMAIN = 'http://localhost:4242';
 
+
+
+
+router.post("/", async (req, res) => {
+  try {
+  const code= new Code(req.body);
+   
+  const coupon = await stripe.coupons.create({
+    percent_off: 10,
+    duration: 'repeating',
+    duration_in_months: 3,
+  });
+ 
+  } catch (ex) {
+    return res.status(500).send(`Internal Server Error:${ex}`);
+  }
+});
+
+
+router.post("/", async (req, res) => {
+  try {
+  const promo= new Promo(req.body);
+    
+  const promotionCode = await stripe.promotionCodes.create({
+    coupon: 'Z4OV52SU',
+  });
+  } catch (ex) {
+    return res.status(500).send(`Internal Server Error:${ex}`);
+  }
+});
+
+
+
 app.post('/checkout', async (req, res) => {
   const session = await stripe.checkout.sessions.create({
     line_items: [
       {
         // Provide the exact Price ID (e.g. pr_1234) of the product you want to sell
-        price: 'price_1JzB9kFWtTbIjd1dtugTH38Z',
+        price: 'PRICE_ID',
         quantity: 1,
       },
     ],
